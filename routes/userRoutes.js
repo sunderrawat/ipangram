@@ -37,12 +37,39 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.find({ email, password });
-  res.status(200).json({
-    status: 'success',
-    message: 'user login success',
-  });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'fail',
+        message: 'user credientials are incorrect',
+      });
+    }
+
+    if (user) {
+      const passwordCheck = await user.checkPassword(password, user.password);
+      console.log(passwordCheck);
+      if (!passwordCheck) {
+        return res.status(401).json({
+          status: 'fail',
+          message: 'user credientials are incorrect',
+        });
+      }
+      return res.status(200).json({
+        status: 'success',
+        message: 'user login success',
+        user,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: 'fail',
+      message: 'server error',
+    });
+  }
 });
 
 router
@@ -65,7 +92,7 @@ router
   })
   .delete(async (req, res) => {
     try {
-      await User.deleteMany();
+      await User.deleteMany({});
       res.status(204).json({
         status: 'success',
         message: 'all user deleted',
@@ -77,4 +104,5 @@ router
       });
     }
   });
+
 module.exports = router;
