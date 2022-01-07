@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { default: slugify } = require('slugify');
-const slug = require('slugify');
+
+const slugify = require('slugify');
 
 const projectSchema = new mongoose.Schema({
   name: {

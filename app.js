@@ -1,6 +1,7 @@
 const express = require('express');
 const userRouter = require('./routes/userRoutes');
 const projectRouter = require('./routes/projectRoutes');
+const authController = require('./controller/authController');
 
 const app = express();
 //for body parsing data
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/projects', projectRouter);
+app.use('/api/v1/projects', authController.protect, projectRouter);
 
 app.all('*', (req, res) => {
   res.status(404).json({
