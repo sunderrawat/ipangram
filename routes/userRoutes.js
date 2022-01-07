@@ -28,7 +28,7 @@ router.post('/signup', async (req, res) => {
       message: 'user created successfully',
     });
   } catch (err) {
-      console.log(err);
+    console.log(err);
     res.status(400).json({
       status: 'fail',
       message: 'user not created',
@@ -36,10 +36,45 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.find({ email, password });
   res.status(200).json({
     status: 'success',
-    message: 'user login sccess',
+    message: 'user login success',
   });
 });
+
+router
+  .route('/')
+  .get(async (req, res) => {
+    try {
+      const users = await User.find();
+      res.status(200).json({
+        status: 'success',
+        message: 'all user data',
+        users,
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'fail',
+        message: 'something went wrong',
+        err,
+      });
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      await User.deleteMany();
+      res.status(204).json({
+        status: 'success',
+        message: 'all user deleted',
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'fail',
+        err,
+      });
+    }
+  });
 module.exports = router;

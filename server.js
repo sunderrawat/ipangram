@@ -6,7 +6,11 @@ const app = require('./app');
 const port = process.env.port || 3000;
 const DB = process.env.DB;
 mongoose
-  .connect(DB)
+  .connect(DB, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    autoIndex: true,
+  })
   .then(() => {
     console.log('DB connect successfully');
   })
@@ -15,8 +19,8 @@ mongoose
   });
 
 app.listen(port, (err) => {
-    if(err){
-        console.log(err);
-    }
+  if (err) {
+    console.log(err);
+  }
   console.log(`app is now started on port ${port}`);
 });

@@ -31,7 +31,10 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     minlength: [4, 'email is invalid'],
-    required: true,
+    trim: true,
+    lowercase: true,
+    required: [true, 'email is a required field'],
+    unique: [true, 'this email already exist in our database'],
   },
   role: {
     type: String,
@@ -49,6 +52,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//mongoose middelware for encrypting the password
 userSchema.pre('save', async function (next) {
   //check if password is changed
   if (!this.isModified('password')) return;
@@ -60,6 +64,15 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+//password decrypting and checking method
+userSchema.methods.checkPassword = async function (
+  enterdPassword,
+  dbUserPassword
+) {
+  return await bcrypt.compare(enterdPassword, dbUserPassword);
+};
+
+//creating user model
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
