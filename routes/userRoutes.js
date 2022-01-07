@@ -115,4 +115,53 @@ router
     }
   });
 
+router
+  .route('/:id')
+  .get(async (req, res) => {
+    try {
+      const user = await findById(req.params.id);
+      res.status(200).json({
+        status: 'success',
+        message: 'user data successfully fetched',
+        user,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: 'fail',
+        message: 'something went wrong!',
+      });
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      await User.findByIdAndDelete(req.params.id);
+      res.status(204).json({
+        status: 'success',
+        message: 'user successfully deleted by admin',
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(200).json({
+        status: 'success',
+        message: 'something went wrong!',
+      });
+    }
+  })
+  .patch(async (req, res) => {
+    try {
+      await User.findByIdAndUpdate(req.params.id);
+      res.status(200).json({
+        status: 'success',
+        message: 'user successfully updated by admin',
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: 'success',
+        message: 'something went wrong!',
+      });
+    }
+  });
+
 module.exports = router;
