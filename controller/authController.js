@@ -28,6 +28,12 @@ exports.protect = async (req, res, next) => {
   const user = await User.findById(decoded.id);
 
   //pass the user details to next middelware or handler
+  if (!user) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Login into app to access the content',
+    });
+  }
   req.user = user;
 
   next();

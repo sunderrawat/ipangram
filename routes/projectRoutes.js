@@ -10,7 +10,7 @@ router
     try {
       let projects;
       if (req.user.role === 'employee') {
-        projects = await Project.find({members: {$in: req.user._id}});
+        projects = await Project.find({ members: { $in: req.user._id } });
       } else if (req.user.role === 'mentor') {
         projects = await Project.find({ mentor: req.user._id });
       } else if (req.user.role === 'admin') {
