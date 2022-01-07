@@ -44,7 +44,6 @@ const userSchema = new mongoose.Schema({
     },
     default: 'employee',
   },
-  token: String,
   createdAt: {
     type: Date,
     default: Date.now(),

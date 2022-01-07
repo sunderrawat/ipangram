@@ -1,7 +1,15 @@
 const express = require('express');
 const User = require('./../model/userModel');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+
+const genrateJwt = async function (id) {
+  const token = await jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.EXPIERS_IN,
+  });
+  return token;
+};
 
 router.post('/signup', async (req, res) => {
   try {
@@ -12,8 +20,7 @@ router.post('/signup', async (req, res) => {
       passwordConfirm: req.body.passwordConfirm,
       role: req.body.role || 'employee',
     });
-    console.log(req.body);
-    console.log(user);
+    const token = await genrateJwt(user._id);
     if (!user) {
       res.status(400).json({
         status: 'fail',
@@ -22,6 +29,7 @@ router.post('/signup', async (req, res) => {
     }
     res.status(201).json({
       status: 'success',
+      token,
       data: {
         user,
       },
@@ -50,15 +58,17 @@ router.post('/login', async (req, res) => {
 
     if (user) {
       const passwordCheck = await user.checkPassword(password, user.password);
-      console.log(passwordCheck);
+      user.password = undefined;
       if (!passwordCheck) {
         return res.status(401).json({
           status: 'fail',
           message: 'user credientials are incorrect',
         });
       }
+      const token = await genrateJwt(user._id);
       return res.status(200).json({
         status: 'success',
+        token,
         message: 'user login success',
         user,
       });
