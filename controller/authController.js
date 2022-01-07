@@ -32,3 +32,17 @@ exports.protect = async (req, res, next) => {
 
   next();
 };
+
+//check user role to route protection
+exports.accessTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'you are not authorize to that route',
+      });
+    }
+
+    next();
+  };
+};

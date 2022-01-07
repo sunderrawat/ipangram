@@ -33,6 +33,11 @@ const projectSchema = new mongoose.Schema({
       required: [true, 'project must assign to a developer or other member'],
     },
   ],
+  mentor: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'project must assign to a mentor or other member'],
+  },
   document: String,
   approved: {
     type: Boolean,
@@ -50,9 +55,8 @@ projectSchema.pre('save', function (next) {
 //this can populate users data
 projectSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'members',
+    path: 'members mentor',
   });
-
   next();
 });
 

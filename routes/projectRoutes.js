@@ -8,10 +8,18 @@ router
   .route('/')
   .get(async (req, res) => {
     try {
-      const projects = await Project.find({});
+      let projects;
+      if (req.user.role === 'employee') {
+        projects = await Project.find({members: {$in: req.user._id}});
+      } else if (req.user.role === 'mentor') {
+        projects = await Project.find({ mentor: req.user._id });
+      } else if (req.user.role === 'admin') {
+        projects = await Project.find();
+      }
       res.status(200).json({
         status: 'success',
         data: {
+          results: projects.length,
           message: 'All projects loaded ',
           projects,
         },
@@ -24,9 +32,12 @@ router
       });
     }
   })
-  .post(async (req, res) => {
+  .post(authController.accessTo('admin', 'mentor'), async (req, res) => {
     try {
-      const project = await Project.create(req.body);
+      const project = await Project.create({
+        ...req.body,
+        mentor: req.user._id,
+      });
       res.status(201).json({
         status: 'success',
         data: {
@@ -35,7 +46,7 @@ router
         },
       });
     } catch (err) {
-      console.log(err.code);
+      console.log(err);
       if (err.code === 11000) {
         return res.status(400).json({
           status: 'fail',

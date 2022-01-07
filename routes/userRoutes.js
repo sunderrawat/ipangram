@@ -1,9 +1,10 @@
 const express = require('express');
 const User = require('./../model/userModel');
 const jwt = require('jsonwebtoken');
-
+const authController = require('./../controller/authController');
 const router = express.Router();
 
+const app = express();
 const genrateJwt = async function (id) {
   const token = await jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.EXPIERS_IN,
@@ -82,86 +83,108 @@ router.post('/login', async (req, res) => {
   }
 });
 
+//only allow these all routes for admin and special
+
 router
   .route('/')
-  .get(async (req, res) => {
-    try {
-      const users = await User.find();
-      res.status(200).json({
-        status: 'success',
-        message: 'all user data',
-        users,
-      });
-    } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: 'something went wrong',
-        err,
-      });
+  .get(
+    authController.protect,
+    authController.accessTo('admin'),
+    async (req, res) => {
+      try {
+        const users = await User.find();
+        res.status(200).json({
+          status: 'success',
+          message: 'all user data',
+          users,
+        });
+      } catch (err) {
+        res.status(500).json({
+          status: 'fail',
+          message: 'something went wrong',
+          err,
+        });
+      }
     }
-  })
-  .delete(async (req, res) => {
-    try {
-      await User.deleteMany({});
-      res.status(204).json({
-        status: 'success',
-        message: 'all user deleted',
-      });
-    } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        err,
-      });
+  )
+  .delete(
+    authController.protect,
+    authController.accessTo('admin'),
+    async (req, res) => {
+      try {
+        await User.deleteMany({});
+        res.status(204).json({
+          status: 'success',
+          message: 'all user deleted',
+        });
+      } catch (err) {
+        res.status(500).json({
+          status: 'fail',
+          err,
+        });
+      }
     }
-  });
+  );
 
 router
   .route('/:id')
-  .get(async (req, res) => {
-    try {
-      const user = await findById(req.params.id);
-      res.status(200).json({
-        status: 'success',
-        message: 'user data successfully fetched',
-        user,
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        status: 'fail',
-        message: 'something went wrong!',
-      });
+  .get(
+    authController.protect,
+    authController.accessTo('admin'),
+    async (req, res) => {
+      try {
+        const user = await findById(req.params.id);
+        res.status(200).json({
+          status: 'success',
+          message: 'user data successfully fetched',
+          user,
+        });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          status: 'fail',
+          message: 'something went wrong!',
+        });
+      }
     }
-  })
-  .delete(async (req, res) => {
-    try {
-      await User.findByIdAndDelete(req.params.id);
-      res.status(204).json({
-        status: 'success',
-        message: 'user successfully deleted by admin',
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(200).json({
-        status: 'success',
-        message: 'something went wrong!',
-      });
+  )
+  .delete(
+    authController.protect,
+    authController.accessTo('admin'),
+    async (req, res) => {
+      try {
+        await User.findByIdAndDelete(req.params.id);
+        res.status(204).json({
+          status: 'success',
+          message: 'user successfully deleted by admin',
+        });
+      } catch (err) {
+        console.log(err);
+        res.status(200).json({
+          status: 'success',
+          message: 'something went wrong!',
+        });
+      }
     }
-  })
-  .patch(async (req, res) => {
-    try {
-      await User.findByIdAndUpdate(req.params.id);
-      res.status(200).json({
-        status: 'success',
-        message: 'user successfully updated by admin',
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        status: 'success',
-        message: 'something went wrong!',
-      });
+  )
+  .patch(
+    authController.protect,
+    authController.accessTo('admin'),
+    async (req, res) => {
+      try {
+        await User.findByIdAndUpdate(req.params.id);
+        res.status(200).json({
+          status: 'success',
+          message: 'user successfully updated by admin',
+        });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          status: 'success',
+          message: 'something went wrong!',
+        });
+      }
     }
-  });
+  );
 
 module.exports = router;
