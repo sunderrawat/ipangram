@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -46,6 +47,17 @@ const userSchema = new mongoose.Schema({
     default: Date.now(),
     select: false,
   },
+});
+
+userSchema.pre('save', async function (next) {
+  //check if password is changed
+  if (!this.isModified('password')) return;
+
+  this.password = await bcrypt.hash(this.password, 12);
+  //password confirm field to make undefiend
+  this.passwordConfirm = undefined;
+
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
