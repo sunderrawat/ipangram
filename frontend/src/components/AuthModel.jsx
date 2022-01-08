@@ -1,8 +1,12 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { authActions } from '../store/auth';
+import { alertActions } from '../store/alert';
 import styles from './AuthModel.module.css';
 import Button from './Button';
 import apiUrl from '../apiUrl';
 
 function AuthModel(props) {
+  const dispatch = useDispatch();
   const signupHandler = async (e) => {
     try {
       e.preventDefault();
@@ -21,6 +25,7 @@ function AuthModel(props) {
         data.email.length < 5 ||
         data.password.length < 6
       ) {
+        
         console.log('invalid data input');
         return;
       }
@@ -48,6 +53,13 @@ function AuthModel(props) {
       if (signupData.token) {
         document.cookie = `token=${signupData.token};expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
       }
+      if (signupData.status === 'success') {
+        localStorage.setItem('user', JSON.stringify(signupData.data.user));
+        dispatch(authActions.login());
+        dispatch(alertActions.alertType('success'));
+        dispatch(alertActions.alertMessage('Account Created'));
+        dispatch(alertActions.showAlert());
+      }
       //clear form input
       e.target.name.value = '';
       e.target.email.value = '';
@@ -56,6 +68,9 @@ function AuthModel(props) {
       e.target.role.defaultValue = '';
     } catch (err) {
       console.log(err);
+      dispatch(alertActions.alertType('error'));
+      dispatch(alertActions.alertMessage('Something went wrong'));
+      dispatch(alertActions.showAlert());
     }
   };
 
@@ -82,15 +97,19 @@ function AuthModel(props) {
       const user = await response.json();
       if (user.token) {
         document.cookie = `token=${user.token}; expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
+        localStorage.setItem('user', JSON.stringify(user.user));
+        dispatch(authActions.login());
       }
       console.log(user);
+      dispatch(alertActions.alertType('success'));
+      dispatch(alertActions.alertMessage('Login Success'));
+      dispatch(alertActions.showAlert());
     } catch (err) {
       console.log(err);
     }
     //clear form input
     e.target.email.value = '';
     e.target.password.value = '';
-    console.log('login clicked');
   };
   return (
     <div className={styles.container}>
