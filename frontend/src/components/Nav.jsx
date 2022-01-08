@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '../store/auth';
 import getCookie from '../utils/getCookie';
 import Button from './Button';
+import LoginModal from './Modal/LoginModal';
 import styles from './Nav.module.css';
+
 function Nav() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState();
-  const [logout, setLogout] = useState(0);
   const isLogin = useSelector((state) => state.auth.isAuthenticated);
+  const isOpen = useSelector((state) => state.auth.isOpen);
 
   useEffect(() => {
     let token = getCookie('token');
@@ -22,12 +24,17 @@ function Nav() {
     if (token) {
       dispatch(authActions.login());
     }
-  }, [isLogin]);
-  const signupHandler = () => {
+  }, [isLogin, isOpen]);
+  const signupClickHandler = () => {
     console.log('signup clicked');
+    dispatch(authActions.modalSelection('signup'));
+    dispatch(authActions.loginModel());
+    console.log(isOpen);
   };
-  const loginHandler = () => {
+  const loginClickHandler = () => {
     console.log('login clicked');
+    dispatch(authActions.modalSelection('login'));
+    dispatch(authActions.loginModel());
   };
   const logoutHandler = () => {
     dispatch(authActions.logout());
@@ -53,10 +60,10 @@ function Nav() {
         ) : (
           <>
             <li>
-              <Button name="SignUp" onClick={signupHandler}></Button>
+              <Button name="SignUp" onClick={signupClickHandler}></Button>
             </li>
             <li>
-              <Button name="Login" onClick={loginHandler}></Button>
+              <Button name="Login" onClick={loginClickHandler}></Button>
             </li>
           </>
         )}

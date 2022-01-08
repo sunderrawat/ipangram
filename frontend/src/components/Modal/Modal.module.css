@@ -8,7 +8,9 @@
   transition: all 0.3s;
   border-radius: 1rem;
   overflow: hidden;
-  background-color: #222;
+  background-color: #4d7d87;
+  width: 40%;
+  padding: 2rem;
 }
 
 .alert {

@@ -5,6 +5,7 @@ const initialAuthState = {
   isAuthenticated:
     getCookie('token') && getCookie('token').length > 1 ? true : false,
   isOpen: false,
+  modelSelect: 'signup',
 };
 
 const authSlice = createSlice({
@@ -16,8 +17,7 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isAuthenticated = false;
-      document.cookie =
-        'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
       localStorage.removeItem('user');
     },
     loginModel(state) {
@@ -25,7 +25,10 @@ const authSlice = createSlice({
     },
     loginModelCustom(state, action) {
       state.isOpen = action.payload;
-    }
+    },
+    modalSelection(state, action) {
+      state.modelSelect = action.payload;
+    },
   },
 });
 
