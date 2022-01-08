@@ -1,0 +1,16 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 0.7rem 2.9rem 0px;
+  transition: all 0.3s;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #222;
+}
+
+.alert {
+  top: 95%;
+}
