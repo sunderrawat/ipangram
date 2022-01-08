@@ -8,7 +8,15 @@ import apiUrl from '../apiUrl';
 function Auth(props) {
   const dispatch = useDispatch();
   const modelSelect = useSelector((state) => state.auth.modelSelect);
-  
+
+  //alert render function
+  function alertRender(type, message) {
+    dispatch(alertActions.alertType(type));
+    dispatch(alertActions.alertMessage(message));
+    dispatch(alertActions.showAlert());
+  }
+
+  //signup handler
   const signupHandler = async (e) => {
     try {
       e.preventDefault();
@@ -28,11 +36,13 @@ function Auth(props) {
         data.password.length < 6
       ) {
         console.log('invalid data input');
+        alertRender('error', 'Invalid Data');
         return;
       }
       //check password is same
       if (data.password !== data.passwordConfirm) {
         console.log('password are not matched');
+        alertRender('error', 'password not matched');
         return;
       }
 
@@ -47,6 +57,7 @@ function Auth(props) {
       console.log(response);
       if (!response.ok) {
         console.log('Invalid data post');
+        alertRender('error', 'Invalid data posted try again!');
       }
 
       const signupData = await response.json();
@@ -56,11 +67,9 @@ function Auth(props) {
       }
       if (signupData.status === 'success') {
         localStorage.setItem('user', JSON.stringify(signupData.data.user));
-        dispatch(authActions.login());
-        dispatch(alertActions.alertType('success'));
-        dispatch(alertActions.alertMessage('Account Created'));
-        dispatch(alertActions.showAlert());
-        dispatch(authActions.loginModel());
+        alertRender('success', 'Account Creation Success');
+        dispatch(authActions.modalSelection('nothing'));
+        dispatch(authActions.loginModelCustom(false));
       }
       //clear form input
       e.target.name.value = '';
@@ -70,9 +79,7 @@ function Auth(props) {
       e.target.role.defaultValue = '';
     } catch (err) {
       console.log(err);
-      dispatch(alertActions.alertType('error'));
-      dispatch(alertActions.alertMessage('Something went wrong'));
-      dispatch(alertActions.showAlert());
+      alertRender('error', 'something went wrong try again~');
     }
   };
 
@@ -86,6 +93,7 @@ function Auth(props) {
 
       if (data.email.length < 5 || data.password.length < 6) {
         console.log('invalid data');
+        alertRender('error', 'Invaild data of email and password');
         return;
       }
       const response = await fetch(`${apiUrl}/users/login`, {
@@ -97,26 +105,22 @@ function Auth(props) {
       });
       console.log(response);
       if (!response.ok) {
+        alertRender('error', 'login failed ');
+      }
+      if (response.ok) {
         const user = await response.json();
-        if (user.token) {
-          document.cookie = `token=${user.token}; expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
-          localStorage.setItem('user', JSON.stringify(user.user));
-          dispatch(authActions.login());
+        if (!user.token) {
+          return alertRender('error', 'login failed ');
         }
-        console.log(user);
-        dispatch(alertActions.alertType('success'));
-        dispatch(alertActions.alertMessage('Login Success'));
-        dispatch(alertActions.showAlert());
+        document.cookie = `token=${user.token}; expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
+        localStorage.setItem('user', JSON.stringify(user.user));
+        dispatch(authActions.login());
+        alertRender('success', 'User Login success');
         dispatch(authActions.loginModel());
       }
-      dispatch(alertActions.alertType('error'));
-      dispatch(alertActions.alertMessage('Login Failed!'));
-      dispatch(alertActions.showAlert());
     } catch (err) {
       console.log(err);
-      dispatch(alertActions.alertType('error'));
-      dispatch(alertActions.alertMessage('Login Failed!'));
-      dispatch(alertActions.showAlert());
+      alertRender('error', 'login failed ');
     }
     //clear form input
     e.target.email.value = '';
@@ -181,7 +185,7 @@ function Auth(props) {
             </div>
             <Button name="Signup" cssName="model"></Button>
           </form>
-        ) : (
+        ) : modelSelect === 'login' ? (
           <form className={styles.form} onSubmit={loginHandler}>
             <label htmlFor="email">Email</label>
             <input required name="email" type="email" />
@@ -189,6 +193,8 @@ function Auth(props) {
             <input required name="password" type="password" />
             <Button name="Login" cssName="model"></Button>
           </form>
+        ) : (
+          ''
         )}
       </div>
     </div>
