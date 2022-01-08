@@ -1,0 +1,19 @@
+.nav {
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  height: 9rem;
+}
+.logo {
+  width: 10rem;
+  height: 6rem;
+  margin-left: 4rem;
+}
+.list {
+  display: flex;
+  list-style: none;
+  flex-basis: 25%;
+  justify-content: space-around;
+}
