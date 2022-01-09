@@ -23,3 +23,7 @@
   align-self: center;
   color: #fff;
 }
+
+.flex_basis{
+  flex-basis: 70%;
+}

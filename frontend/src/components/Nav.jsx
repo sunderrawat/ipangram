@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../store/auth';
 import getCookie from '../utils/getCookie';
 import Button from './Button';
@@ -9,6 +10,8 @@ import styles from './Nav.module.css';
 function Nav() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState();
+  // const navigate = useNavigate();
+  // console.log(navigate);
   const isLogin = useSelector((state) => state.auth.isAuthenticated);
   const isOpen = useSelector((state) => state.auth.isOpen);
 
@@ -38,6 +41,7 @@ function Nav() {
   };
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    // navigate('/');
   };
   return (
     <nav className={styles.nav}>
@@ -48,11 +52,15 @@ function Nav() {
           className={styles.logo}
         />
       </div>
-      <ul className={styles.list}>
+      <ul className={`${styles.list} ${isLogin && styles.flex_basis}`}>
         {isLogin ? (
           <>
             <li className={styles.name}>{userData && userData.name}</li>
             <li className={styles.name}>{userData && userData.role}</li>
+            <li className={styles.name}>
+              <Link to="/projects"></Link>
+              Projects
+            </li>
             <li>
               <Button name="Logout" onClick={logoutHandler}></Button>
             </li>

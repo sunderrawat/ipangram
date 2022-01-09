@@ -27,9 +27,9 @@ function Homepage(props) {
   return (
     <div>
       <div className={styles.homepage}>
-        <h1 className={styles.heading}>
+        {/* <h1 className={styles.heading}>
           Wellcome to project management software login/signup to access
-        </h1>
+        </h1> */}
         {showAlert ? (
           <AlertModal type={alertType} message={alertMessage}></AlertModal>
         ) : (

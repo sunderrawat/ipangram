@@ -4,7 +4,7 @@ function Button(props) {
   return (
     <button
       className={`${styles.btn} ${
-        props.cssName === 'model' ? styles.model : ''
+        props.className === 'model' ? styles.model : ''
       }`}
       onClick={props.onClick}
     >

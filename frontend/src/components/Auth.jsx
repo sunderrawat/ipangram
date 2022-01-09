@@ -183,7 +183,7 @@ function Auth(props) {
                 </label>
               </div>
             </div>
-            <Button name="Signup" cssName="model"></Button>
+            <Button name="Signup" className="model"></Button>
           </form>
         ) : modelSelect === 'login' ? (
           <form className={styles.form} onSubmit={loginHandler}>
