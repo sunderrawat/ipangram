@@ -1,86 +1,125 @@
-import styles from "./Form.module.css";
-import classes from "./ProjectForm.module.css";
-function ProjectForm(props){
-    return (
-      <div className={styles.container}>
-        <div>
-          <h1>Add a new project</h1>
+import styles from './Form.module.css';
+import classes from './ProjectForm.module.css';
+import Button from '../Button';
+
+function ProjectForm(props) {
+  console.log(props.members);
+  return (
+    <div className={classes.container}>
+      <form
+        className={styles.form}
+        onSubmit={props.onSubmit}
+        id="project_form"
+      >
+        <label htmlFor="form__name">Project Title</label>
+        <input name="name" type="text" id="form__name" />
+        <label htmlFor="startDate">Start Date</label>
+        <input
+          type="date"
+          min="2022-01-09"
+          max="2025-12-31"
+          name="startDate"
+          id="startDate"
+        />
+        <label htmlFor="endDate">End Date</label>
+        <input
+          type="date"
+          min="2022-01-09"
+          max="2025-12-31"
+          id="endDate"
+          name="endDate"
+        />
+        <label htmlFor="feature_image">Project Feature Image</label>
+        <input type="file" id="feature_image" accept="image/*" />
+        <label htmlFor="files">Choose Multiple Doucments</label>
+        <input type="file" id="files" multiple />
+        <label htmlFor="description" type="text-area">
+          Description
+        </label>
+        <textarea id="description" rows="5" cols="50"></textarea>
+        <label htmlFor="members">Members</label>
+        {props.members && props.members.length > 0 && props.members[0]._id ? (
+          props.members.map((user, i) => (
+            <div className={styles.radio__container} key={i}>
+              <div className={styles.radio__group}>
+                <label htmlFor={user._id}>
+                  {user.name}
+                  <input
+                    type="checkbox"
+                    name="members"
+                    id={user._id}
+                    value={user._id}
+                  />
+                  <span
+                    className={`${styles.checkmark} ${styles.checkmark__checkbox}`}
+                  ></span>
+                </label>
+              </div>
+            </div>
+          ))
+        ) : (
+          <h3>No User Account created yet</h3>
+        )}
+        <label>Project Status</label>
+        <div className={styles.radio__container}>
+          <div className={styles.radio__group}>
+            <label htmlFor="form__pending">
+              Pending
+              <input
+                type="radio"
+                name="status"
+                id="form__pending"
+                value="pending"
+                defaultChecked
+              />
+              <span className={styles.checkmark}></span>
+            </label>
+          </div>
+          <div className={styles.radio__group}>
+            <label htmlFor="form__completed">
+              Completed
+              <input
+                type="radio"
+                name="status"
+                value="completed"
+                id="form__completed"
+              />
+              <span className={styles.checkmark}></span>
+            </label>
+          </div>
         </div>
-        <form className={styles.form}>
-          <label htmlFor="name">Project Title</label>
-          <input name="name" type="text" id="name" />
-          <label htmlFor="startDate">Start Date</label>
-          <input
-            type="date"
-            min="2022-01-09"
-            max="2025-12-31"
-            name="startDate"
-            id="startDate"
-          />
-          <label htmlFor="endDate">End Date</label>
-          <input
-            type="date"
-            min="2022-01-09"
-            max="2025-12-31"
-            id="endDate"
-            name="endDate"
-          />
-          <label htmlFor="feature__image">Project Feature Image</label>
-          <input type="file" accept="image/*" />
-          <label htmlFor="files">Choose Multiple Doucments</label>
-          <input type="file" multiple />
-          <label htmlFor="description" type="text-area">
-            Description
-          </label>
-          <textarea id="description" rows="5" cols="50"></textarea>
-          <label htmlFor="members">Members</label>
-          <input type="checkbox" id="sunder" />
-          <label htmlFor="sunder">sunder</label>
-          <div className={styles.radio__container}>
-            <div className={styles.radio__group}>
-              <label htmlFor="ravi">
-                ravi
-                <input
-                  type="checkbox"
-                  name="members"
-                  id="ravi"
-                  value="ravi"
-                />
-                <span className={styles.checkmark}></span>
-              </label>
-            </div>
+        <label>Project Approval Status</label>
+        <div className={styles.radio__container}>
+          <div className={styles.radio__group}>
+            <label htmlFor="approval_pending">
+              Pending
+              <input
+                type="radio"
+                name="approval"
+                id="approval_pending"
+                value="pending"
+                defaultChecked
+              />
+              <span className={styles.checkmark}></span>
+            </label>
           </div>
-          <label>Project Sataus</label>
-          <div className={styles.radio__container}>
-            <div className={styles.radio__group}>
-              <label htmlFor="pending">
-                Pending
-                <input
-                  type="radio"
-                  name="status"
-                  id="pending"
-                  value="pending"
-                  defaultChecked
-                />
-                <span className={styles.checkmark}></span>
-              </label>
-            </div>
-            <div className={styles.radio__group}>
-              <label htmlFor="completed">
-                Completed
-                <input
-                  type="radio"
-                  name="status"
-                  value="completed"
-                  id="completed"
-                />
-                <span className={styles.checkmark}></span>
-              </label>
-            </div>
+          <div className={styles.radio__group}>
+            <label htmlFor="approval_completed">
+              Completed
+              <input
+                type="radio"
+                name="approval"
+                value="completed"
+                id="approval_completed"
+              />
+              <span className={styles.checkmark}></span>
+            </label>
           </div>
-        </form>
-      </div>
-    );
+        </div>
+        <Button name="Submit" className="model"></Button>
+      </form>
+    </div>
+  );
 }
 
 export default ProjectForm;

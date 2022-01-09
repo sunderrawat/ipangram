@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/users', userRouter);
-app.use('./api/v1', authController.protect);
+app.use('/api/v1', authController.protect);
 app.use('/api/v1/projects', authController.protect, projectRouter);
 
 app.all('*', (req, res) => {

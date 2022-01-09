@@ -1,20 +1,28 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { authActions } from '../store/auth';
 import { alertActions } from '../store/alert';
-import styles from './Auth.module.css';
+import classes from './Auth.module.css';
+import styles from './../components/Form/Form.module.css';
 import Button from './Button';
 import apiUrl from '../apiUrl';
+import useAlertRender from '../hooks/alertRender';
 
 function Auth(props) {
   const dispatch = useDispatch();
-  const modelSelect = useSelector((state) => state.auth.modelSelect);
+  const navigate = useNavigate();
+  const { alertRender } = useAlertRender();
+  // const modelSelectRedux = useSelector((state) => state.auth.modelSelect);
+  // console.log('modelSelectRedux ');
+  const [modelSelect, setModelSelect] = useState();
 
   //alert render function
-  function alertRender(type, message) {
-    dispatch(alertActions.alertType(type));
-    dispatch(alertActions.alertMessage(message));
-    dispatch(alertActions.showAlert());
-  }
+  // function alertRender(type, message) {
+  //   dispatch(alertActions.alertType(type));
+  //   dispatch(alertActions.alertMessage(message));
+  //   dispatch(alertActions.showAlert());
+  // }
 
   //signup handler
   const signupHandler = async (e) => {
@@ -63,6 +71,8 @@ function Auth(props) {
       const signupData = await response.json();
       console.log(signupData);
       if (signupData.token) {
+        document.cookie =
+          'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
         document.cookie = `token=${signupData.token};expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
       }
       if (signupData.status === 'success') {
@@ -70,6 +80,7 @@ function Auth(props) {
         alertRender('success', 'Account Creation Success');
         dispatch(authActions.modalSelection('nothing'));
         dispatch(authActions.loginModelCustom(false));
+        navigate('/projects');
       }
       //clear form input
       e.target.name.value = '';
@@ -112,11 +123,14 @@ function Auth(props) {
         if (!user.token) {
           return alertRender('error', 'login failed ');
         }
+        document.cookie =
+          'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
         document.cookie = `token=${user.token}; expires=Sun, 1 Jan 2025 00:00:00 UTC;path="/"`;
         localStorage.setItem('user', JSON.stringify(user.user));
         dispatch(authActions.login());
         alertRender('success', 'User Login success');
         dispatch(authActions.loginModel());
+        navigate('/projects');
       }
     } catch (err) {
       console.log(err);
@@ -128,29 +142,31 @@ function Auth(props) {
   };
 
   const signupClickHandler = () => {
-    dispatch(authActions.modalSelection('signup'));
+    // dispatch(authActions.modalSelection('signup'));
+    setModelSelect('signup');
   };
 
   const loginClickHandler = () => {
-    dispatch(authActions.modalSelection('login'));
+    // dispatch(authActions.modalSelection('login'));
+    setModelSelect('login');
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.upper}>
-        <h2 className={styles.upper__heading}>
+    <div className={classes.container}>
+      <div className={classes.upper}>
+        <h2 className={classes.upper__heading}>
           Welcome to Ipangram Project Tool
         </h2>
-        <div className={styles.selection}>
-          <h2 className={styles.select__signup} onClick={signupClickHandler}>
+        <div className={classes.selection}>
+          <h2 className={classes.select__signup} onClick={signupClickHandler}>
             SignUp
           </h2>
-          <h2 className={styles.select__login} onClick={loginClickHandler}>
+          <h2 className={classes.select__login} onClick={loginClickHandler}>
             Login
           </h2>
         </div>
       </div>
-      <div className={styles.bottom}>
+      <div className={classes.bottom}>
         {modelSelect === 'signup' ? (
           <form className={styles.form} onSubmit={signupHandler}>
             <label htmlFor="name">Full Name</label>
@@ -187,11 +203,16 @@ function Auth(props) {
           </form>
         ) : modelSelect === 'login' ? (
           <form className={styles.form} onSubmit={loginHandler}>
-            <label htmlFor="email">Email</label>
-            <input required name="email" type="email" />
-            <label htmlFor="password">Password</label>
-            <input required name="password" type="password" />
-            <Button name="Login" cssName="model"></Button>
+            <label htmlFor="login__email">Email</label>
+            <input required name="email" type="email" id="login__email" />
+            <label htmlFor="login__password">Password</label>
+            <input
+              required
+              name="password"
+              type="password"
+              id="login__password"
+            />
+            <Button name="Login" className="model"></Button>
           </form>
         ) : (
           ''

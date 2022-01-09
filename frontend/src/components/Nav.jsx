@@ -3,14 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../store/auth';
 import getCookie from '../utils/getCookie';
+import useRender from './../hooks/alertRender';
 import Button from './Button';
-import LoginModal from './Modal/LoginModal';
 import styles from './Nav.module.css';
 
 function Nav() {
   const dispatch = useDispatch();
+  const { alertRender } = useRender();
   const [userData, setUserData] = useState();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // console.log(navigate);
   const isLogin = useSelector((state) => state.auth.isAuthenticated);
   const isOpen = useSelector((state) => state.auth.isOpen);
@@ -22,8 +23,8 @@ function Nav() {
     if (userData && userData.name) {
       setUserData(userData);
     }
-    console.log(token);
-    console.log(JSON.parse(user));
+    // console.log(token);
+    // console.log(JSON.parse(user));
     if (token) {
       dispatch(authActions.login());
     }
@@ -41,16 +42,19 @@ function Nav() {
   };
   const logoutHandler = () => {
     dispatch(authActions.logout());
-    // navigate('/');
+    navigate('/');
+    alertRender('success', 'Logout Success');
   };
   return (
     <nav className={styles.nav}>
       <div className={styles.left}>
-        <img
-          src="https://www.ipangram.com/_next/static/images/logo-a86c677ce806e4a78befd292693c87bd.png"
-          alt="logo"
-          className={styles.logo}
-        />
+        <Link to="/">
+          <img
+            src="https://www.ipangram.com/_next/static/images/logo-a86c677ce806e4a78befd292693c87bd.png"
+            alt="logo"
+            className={styles.logo}
+          />
+        </Link>
       </div>
       <ul className={`${styles.list} ${isLogin && styles.flex_basis}`}>
         {isLogin ? (
@@ -58,8 +62,7 @@ function Nav() {
             <li className={styles.name}>{userData && userData.name}</li>
             <li className={styles.name}>{userData && userData.role}</li>
             <li className={styles.name}>
-              <Link to="/projects"></Link>
-              Projects
+              <Link to="/projects">Projects</Link>
             </li>
             <li>
               <Button name="Logout" onClick={logoutHandler}></Button>

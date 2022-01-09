@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     required: [true, 'email is a required field'],
-    unique: [true, 'this email already exist in our database'],
+    unique: [true, 'this email already exist in our database']
   },
   role: {
     type: String,

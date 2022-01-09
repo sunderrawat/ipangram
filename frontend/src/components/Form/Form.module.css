@@ -74,9 +74,13 @@
   border-radius: 50%;
 }
 
+.checkmark__checkbox {
+  border-radius: 0;
+}
+
 /* On mouse-over, add a grey background color */
 .radio__group label:hover input ~ .checkmark {
-  background-color: #ccc;
+  background-color: yellow;
 }
 
 .radio__group input:checked ~ .checkmark {

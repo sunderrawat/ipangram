@@ -7,7 +7,6 @@ const projectSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: [true, 'project must have a name'],
-    unique: [true, 'project name must be unique'],
   },
   startDate: {
     type: Date,
@@ -39,13 +38,13 @@ const projectSchema = new mongoose.Schema({
     required: [true, 'project must assign to a mentor or other member'],
   },
   document: String,
-  approved: {
+  isApproved: {
     type: Boolean,
     default: false,
   },
-  isCompleted:{
+  isCompleted: {
     type: Boolean,
-    default: false
+    default: false,
   },
   slug: String,
 });

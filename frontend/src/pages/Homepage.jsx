@@ -20,7 +20,7 @@ function Homepage(props) {
   useEffect(() => {}, [showAlert]);
 
   function clickLoginHandler() {
-    console.log('backdrop clicked')
+    console.log('backdrop clicked');
     dispatch(authActions.loginModel());
   }
 

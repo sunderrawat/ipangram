@@ -84,15 +84,14 @@ router.post('/login', async (req, res) => {
 });
 
 //only allow these all routes for admin and special
-
 router
   .route('/')
   .get(
     authController.protect,
-    authController.accessTo('admin'),
+    authController.accessTo('mentor', 'admin'),
     async (req, res) => {
       try {
-        const users = await User.find();
+        const users = await User.find().select('-__v');
         res.status(200).json({
           status: 'success',
           message: 'all user data',

@@ -1,9 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import getCookie from './../utils/getCookie';
-
+let user = localStorage.getItem('user');
+let userData = JSON.parse(user);
+let loginState =
+  userData &&
+  userData.name &&
+  getCookie('token') &&
+  getCookie('token').length > 1
+    ? true
+    : false;
 const initialAuthState = {
-  isAuthenticated:
-    getCookie('token') && getCookie('token').length > 1 ? true : false,
+  isAuthenticated: loginState,
   isOpen: false,
   modelSelect: 'signup',
 };

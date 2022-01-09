@@ -1,61 +1,97 @@
 import { Link } from 'react-router-dom';
 import Button from '../Button';
+import Date from '../Date/Date';
 import styles from './ProjectCard.module.css';
 
 function ProjectCard(props) {
+  const data = props.data;
+  let user = localStorage.getItem('user');
+  let userData = JSON.parse(user);
+  let userRole = userData && userData.role;
   return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <h3 className={styles.heading}>This is project heading</h3>
-        <Link to="add-new-project">
-          <Button className="model" name="Edit Project"></Button>
-        </Link>
-        <div className={styles.date}>
-          <div className={styles.startdate}>
-            <span className={styles.small__heading}>Start Date : </span>
-            <span className={styles.text}>12-jan-2022</span>
-          </div>
-          <div className={styles.enddate}>
-            <span className={styles.small__heading}>End Date :</span>{' '}
-            <span className={styles.text}> 30-apr-2022</span>
-          </div>
-        </div>
-      </div>
-      <div className={styles.bottom}>
-        <div className={styles.img__box}>
-          <img
-            src="http://prcagrimex.co.th/en/wp-content/uploads/2014/04/dummy-image-green-e1398449160839.jpg"
-            alt={props.name}
-            className={styles.img}
-          />
-        </div>
-        <div className={styles.right}>
-          <div className={styles.row}>
-            <div>
-              <span className={styles.small__heading}>Total Members : </span>
-              <span className={styles.text}>5</span>
+    <>
+      {data && data.length > 0 ? (
+        data.map((project, i) => (
+          <div className={styles.container} key={i}>
+            <div className={styles.top}>
+              <h3 className={styles.heading}>{project.name}</h3>
+              {userRole === 'mentor' ? (
+                <Link to="edit-project">
+                  <Button className="model" name="Edit Project"></Button>
+                </Link>
+              ) : (
+                ''
+              )}
+              <div className={styles.date}>
+                <Date date={project.startDate}></Date>
+                <Date date={project.endDate}></Date>
+              </div>
             </div>
-            <div>
-              <span className={styles.small__heading}> Status : </span>
-              <span className={styles.text}>Pending</span>
+            <div className={styles.bottom}>
+              <div className={styles.img__box}>
+                <img
+                  src="http://prcagrimex.co.th/en/wp-content/uploads/2014/04/dummy-image-green-e1398449160839.jpg"
+                  alt={props.name}
+                  className={styles.img}
+                />
+              </div>
+              <div className={styles.right}>
+                <div className={styles.row}>
+                  <div>
+                    <span className={styles.small__heading}>
+                      Total Members :{' '}
+                    </span>
+                    <span className={styles.text}>
+                      {project.members.length}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles.small__heading}> Status : </span>
+                    <span className={styles.text}>
+                      {project.isCompleted ? 'Completed' : 'Pending'}
+                    </span>
+                  </div>
+                </div>
+                <div className={styles.row}>
+                  <div>
+                    <span className={styles.small__heading}>Members : </span>
+                    {project.members.map((member) => (
+                      <span
+                        className={styles.member_name}
+                        key={member._id}
+                        id={member._id}
+                      >
+                        {member.name}
+                      </span>
+                    ))}
+                  </div>
+                  <div>
+                    <span className={styles.small__heading}> Approved : </span>
+                    <span className={styles.text}>
+                      {project.isApproved ? 'Yes' : 'No'}
+                    </span>
+                  </div>
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.description}>
+                    <span className={styles.small__heading}>
+                      Description :{' '}
+                    </span>
+                    <span className={`${styles.text} ${styles.discription}`}>
+                      {project.description}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className={styles.row}>
-            <div>
-              <span className={styles.small__heading}>Members : </span> Sunil,
-              Nisha, Mohan
-            </div>
-          </div>
-          <div className={styles.row}>
-            <span className={styles.small__heading}>Description : </span>
-            <span className={`${styles.text} ${styles.discription}`}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non
-              dignissim lacus. Morbi
-            </span>
-          </div>
+        ))
+      ) : (
+        <div>
+          <h3 className={styles.heading}>No Projects </h3>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
