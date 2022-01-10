@@ -1,24 +1,10 @@
 const express = require('express');
-const formidable = require('formidable');
 const Project = require('../model/projectModel');
 const authController = require('./../controller/authController');
+const { uploadProjectDocs } = require('./../controller/projectController');
 const { route } = require('./userRoutes');
 
 const router = express.Router();
-
-//test form data
-router.route('/upload').post((req, res) => {
-  const form = formidable({ multiples: true });
-
-  form.parse(req, (err, fields, files) => {
-    console.log('fields ',fields, files);
-    if (err) {
-      console.log(err)
-      return res.json({ err });;
-    }
-    res.json({ fields, files });
-  });
-});
 
 router
   .route('/')
@@ -48,35 +34,50 @@ router
       });
     }
   })
-  .post(authController.accessTo('admin', 'mentor'), async (req, res) => {
-    try {
-      console.log('body data by user ', req.body);
-      console.log('file data by user ', req.fields);
-      const project = await Project.create({
-        ...req.body,
-        mentor: req.user._id,
-      });
-      res.status(201).json({
-        status: 'success',
-        data: {
-          project,
-          message: 'project successfully created',
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      if (err.code === 11000) {
-        return res.status(400).json({
+  .post(
+    authController.accessTo('admin', 'mentor'),
+    uploadProjectDocs,
+    async (req, res) => {
+      try {
+        console.log('body data by user ', req.body);
+        console.log(JSON.stringify(req.body.members).slice(1,-1).length);
+        let members = JSON.stringify(req.body.members).slice(1, -1);
+        const data = {
+          name: req.body.name,
+          startDate: req.body.startDate,
+          endDate: req.body.endDate,
+          description: req.body.description,
+          members,
+          featureImage: req.body.featureImage,
+          documents: req.body.documents,
+          mentor: req.user._id,
+          isApproved: req.body.isApproved,
+          isCompleted: req.body.isCompleted,
+        };
+        // console.log(req.body.members);
+        const project = await Project.create(data);
+        res.status(201).json({
+          status: 'success',
+          data: {
+            project,
+            message: 'project successfully created',
+          },
+        });
+      } catch (err) {
+        console.log(err);
+        if (err.code === 11000) {
+          return res.status(400).json({
+            status: 'fail',
+            message: err.message || 'project creation failed',
+          });
+        }
+        res.status(500).json({
           status: 'fail',
-          message: err.message || 'project creation failed',
+          message: 'project creation failed',
         });
       }
-      res.status(500).json({
-        status: 'fail',
-        message: 'project creation failed',
-      });
     }
-  });
+  );
 
 router
   .route('/:id')

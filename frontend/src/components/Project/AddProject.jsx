@@ -21,13 +21,13 @@ function AddProject(props) {
       //   console.log(e.target.status.value);
       let membersArr = e.target.members;
       // console.log(e.target.files.files);
-      const feature_image =
+      const featureImage =
         e.target.feature_image.files && e.target.feature_image.files[0];
       if (e.target.files.files && e.target.files.files.length > 0) {
         for (let i = 0; i < e.target.files.files.length; i++) {
           // console.log(e.target.files.files[i]);
           formData.append(
-            e.target.files.files[i].name,
+            'documents',
             e.target.files.files[i]
           );
         }
@@ -55,7 +55,7 @@ function AddProject(props) {
         isCompleted,
         isApproved,
         members,
-        feature_image,
+        featureImage,
       };
       console.log(data);
 

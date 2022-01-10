@@ -4,7 +4,6 @@ const cors = require('cors');
 const userRouter = require('./routes/userRoutes');
 const projectRouter = require('./routes/projectRoutes');
 const authController = require('./controller/authController');
-
 const app = express();
 app.use(cors());
 //for body parsing data

@@ -37,7 +37,8 @@ const projectSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'project must assign to a mentor or other member'],
   },
-  document: String,
+  documents: [String],
+  featureImage:String,
   isApproved: {
     type: Boolean,
     default: false,
