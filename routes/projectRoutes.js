@@ -1,8 +1,24 @@
 const express = require('express');
+const formidable = require('formidable');
 const Project = require('../model/projectModel');
 const authController = require('./../controller/authController');
+const { route } = require('./userRoutes');
 
 const router = express.Router();
+
+//test form data
+router.route('/upload').post((req, res) => {
+  const form = formidable({ multiples: true });
+
+  form.parse(req, (err, fields, files) => {
+    console.log('fields ',fields, files);
+    if (err) {
+      console.log(err)
+      return res.json({ err });;
+    }
+    res.json({ fields, files });
+  });
+});
 
 router
   .route('/')
@@ -34,6 +50,8 @@ router
   })
   .post(authController.accessTo('admin', 'mentor'), async (req, res) => {
     try {
+      console.log('body data by user ', req.body);
+      console.log('file data by user ', req.fields);
       const project = await Project.create({
         ...req.body,
         mentor: req.user._id,

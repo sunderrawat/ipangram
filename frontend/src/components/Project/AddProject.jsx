@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProjectForm from '../Form/ProjectForm';
 import getData from '../../utils/getData';
-import postData from '../../utils/postData';
+import postFormData from '../../utils/postFormData';
 import styles from './AddProject.module.css';
 import { Link } from 'react-router-dom';
 import Button from '../Button';
@@ -13,12 +13,26 @@ function AddProject(props) {
   const projectSubmitHandler = async (e) => {
     try {
       e.preventDefault();
+      const formData = new FormData();
       //   console.log(e.target.name.value);
       //   console.log(e.target.startDate.value);
       //   console.log(e.target.endDate.value);
       //   console.log(e.target.description.value);
       //   console.log(e.target.status.value);
       let membersArr = e.target.members;
+      // console.log(e.target.files.files);
+      const feature_image =
+        e.target.feature_image.files && e.target.feature_image.files[0];
+      if (e.target.files.files && e.target.files.files.length > 0) {
+        for (let i = 0; i < e.target.files.files.length; i++) {
+          // console.log(e.target.files.files[i]);
+          formData.append(
+            e.target.files.files[i].name,
+            e.target.files.files[i]
+          );
+        }
+      }
+      
       let membersId = [];
       //get checked member data and store to array
       for (let i = 0; i < membersArr.length; i++) {
@@ -41,6 +55,7 @@ function AddProject(props) {
         isCompleted,
         isApproved,
         members,
+        feature_image,
       };
       console.log(data);
 
@@ -55,9 +70,14 @@ function AddProject(props) {
         alertRender('error', 'Fill all the necesarry data!');
         return;
       }
+      // const formData = new FormData();
+      for (const property in data) {
+        formData.append(property, data[property]);
+      }
+      // console.log(formData);
       //send data to server for adding a new project
-      const addNewProject = await postData('/projects', data);
-      console.log(addNewProject);
+      const addNewProject = await postFormData('/projects/upload', formData);
+      // console.log(addNewProject);
       if (addNewProject.status === 'success') {
         alertRender('success', 'Project Added Successfully');
         document.getElementById('project_form').reset();

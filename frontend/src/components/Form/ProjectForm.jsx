@@ -10,6 +10,7 @@ function ProjectForm(props) {
         className={styles.form}
         onSubmit={props.onSubmit}
         id="project_form"
+        encType="multipart/form-data"
       >
         <label htmlFor="form__name">Project Title</label>
         <input name="name" type="text" id="form__name" />
@@ -30,9 +31,14 @@ function ProjectForm(props) {
           name="endDate"
         />
         <label htmlFor="feature_image">Project Feature Image</label>
-        <input type="file" id="feature_image" accept="image/*" />
+        <input
+          type="file"
+          name="feature_image"
+          id="feature_image"
+          accept="image/*"
+        />
         <label htmlFor="files">Choose Multiple Doucments</label>
-        <input type="file" id="files" multiple />
+        <input type="file" name='files' id="files" multiple />
         <label htmlFor="description" type="text-area">
           Description
         </label>
