@@ -18,3 +18,9 @@
     align-self: flex-start;
     width: 100%;
 }
+
+@media (max-width: 600px) {
+  .container{
+      padding: 4rem 2rem;
+  }
+}

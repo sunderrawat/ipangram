@@ -29,3 +29,13 @@
 .bottom {
   width: 100%;
 }
+
+@media (max-width: 600px) {
+  .upper__heading {
+    display: none;
+  }
+  .select__login{
+  border-left: 1px solid #000;
+  padding-left: 2rem;
+}
+}

@@ -27,3 +27,9 @@
 .flex_basis{
   flex-basis: 70%;
 }
+
+@media (max-width: 600px) {
+  .hide{
+    display: none;
+  }
+}

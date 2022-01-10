@@ -73,3 +73,13 @@
   font-size: 2rem;
   padding: 1rem;
 }
+
+@media (max-width: 600px) {
+  .top{
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .date{
+    flex-direction: row;
+  }
+}

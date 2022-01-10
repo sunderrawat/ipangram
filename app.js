@@ -31,6 +31,6 @@ app.use('/api/v1/projects', authController.protect, projectRouter);
 // });
 
 //serve frontend
-app.use(express.static(__dirname + '/frontend/build'));
+// app.use(express.static(__dirname + '/frontend/build'));
 
 module.exports = app;

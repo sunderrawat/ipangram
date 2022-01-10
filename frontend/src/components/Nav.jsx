@@ -60,7 +60,7 @@ function Nav() {
         {isLogin ? (
           <>
             <li className={styles.name}>{userData && userData.name}</li>
-            <li className={styles.name}>{userData && userData.role}</li>
+            <li className={`${styles.name} ${styles.hide}`}>{userData && userData.role}</li>
             <li className={styles.name}>
               <Link to="/projects">Projects</Link>
             </li>
