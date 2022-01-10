@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from '../Button';
+import DeleteProject from './DeleteProject';
 import Date from '../Date/Date';
 import styles from './ProjectCard.module.css';
 
@@ -16,9 +17,12 @@ function ProjectCard(props) {
             <div className={styles.top}>
               <h3 className={styles.heading}>{project.name}</h3>
               {userRole === 'mentor' ? (
-                <Link to={`edit-project/${project._id}`}>
-                  <Button className="model" name="Edit Project"></Button>
-                </Link>
+                <>
+                  <Link to={`edit-project/${project._id}`}>
+                    <Button className="model" name="Edit Project"></Button>
+                  </Link>
+                  <DeleteProject id={project._id}></DeleteProject>
+                </>
               ) : (
                 ''
               )}

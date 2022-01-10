@@ -1,10 +1,10 @@
 import getCookie from './getCookie';
 import apiUrl from './../apiUrl';
 
-async function postData(url, bodyData) {
+async function postData(url, bodyData, method='POST') {
   let token = getCookie('token');
   const res = await fetch(`${apiUrl}${url}`, {
-    method: 'POST',
+    method,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
