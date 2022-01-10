@@ -43,7 +43,7 @@ function Projects() {
               ''
             )}
           </div>
-          <div className={styles.bottom} id={deleteRender}>
+          <div className={styles.bottom} id={deleteRender+'jdfl'}>
             <ProjectCard data={data}></ProjectCard>
           </div>
         </div>

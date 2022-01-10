@@ -1,4 +1,4 @@
-function SingleProject() {
+function SingleProject(props) {
   return <div>Welcome to single project page</div>;
 }
 

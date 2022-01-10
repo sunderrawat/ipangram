@@ -34,52 +34,49 @@ router
       });
     }
   })
-  .post(
-    authController.accessTo('admin', 'mentor'),
-    async (req, res) => {
-      try {
-        // console.log('body data by user ', req.body);
-        // console.log(JSON.stringify(req.body.members).slice(1, -1).length);
-        // let members = JSON.stringify(req.body.members).slice(1, -1);
-        // const data = {
-        //   name: req.body.name,
-        //   startDate: req.body.startDate,
-        //   endDate: req.body.endDate,
-        //   description: req.body.description,
-        //   members,
-        //   featureImage: req.body.featureImage,
-        //   documents: req.body.documents,
-        //   mentor: req.user._id,
-        //   isApproved: req.body.isApproved,
-        //   isCompleted: req.body.isCompleted,
-        // };
-        // console.log(req.body.members);
-        const project = await Project.create({
-          ...req.body,
-          mentor: req.user._id,
-        });
-        res.status(201).json({
-          status: 'success',
-          data: {
-            project,
-            message: 'project successfully created',
-          },
-        });
-      } catch (err) {
-        console.log(err);
-        if (err.code === 11000) {
-          return res.status(400).json({
-            status: 'fail',
-            message: err.message || 'project creation failed',
-          });
-        }
-        res.status(500).json({
+  .post(authController.accessTo('admin', 'mentor'), async (req, res) => {
+    try {
+      // console.log('body data by user ', req.body);
+      // console.log(JSON.stringify(req.body.members).slice(1, -1).length);
+      // let members = JSON.stringify(req.body.members).slice(1, -1);
+      // const data = {
+      //   name: req.body.name,
+      //   startDate: req.body.startDate,
+      //   endDate: req.body.endDate,
+      //   description: req.body.description,
+      //   members,
+      //   featureImage: req.body.featureImage,
+      //   documents: req.body.documents,
+      //   mentor: req.user._id,
+      //   isApproved: req.body.isApproved,
+      //   isCompleted: req.body.isCompleted,
+      // };
+      // console.log(req.body.members);
+      const project = await Project.create({
+        ...req.body,
+        mentor: req.user._id,
+      });
+      res.status(201).json({
+        status: 'success',
+        data: {
+          project,
+          message: 'project successfully created',
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      if (err.code === 11000) {
+        return res.status(400).json({
           status: 'fail',
-          message: 'project creation failed',
+          message: err.message || 'project creation failed',
         });
       }
+      res.status(500).json({
+        status: 'fail',
+        message: 'project creation failed',
+      });
     }
-  );
+  });
 
 router
   .route('/:id')
@@ -147,7 +144,7 @@ router
 
 //upload files to project
 router
-  .route('/upload')
+  .route('/:id/upload')
   .patch(
     authController.accessTo('admin', 'mentor'),
     uploadProjectDocs,
@@ -160,7 +157,6 @@ router
         res.status(201).json({
           status: 'success',
           data: {
-            project,
             message: 'project files successfully uploaded',
           },
         });
