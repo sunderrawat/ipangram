@@ -5,7 +5,7 @@ import postData from '../../utils/postData';
 import styles from './AddProject.module.css';
 import { Link, useParams } from 'react-router-dom';
 import Button from '../Button';
-import useRender from './../../hooks/alertRender';
+import useRender from '../../hooks/useAlertRender';
 
 function EditProject(props) {
   const { id } = useParams();

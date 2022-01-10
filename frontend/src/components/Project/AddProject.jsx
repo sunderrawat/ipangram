@@ -5,7 +5,7 @@ import postFormData from '../../utils/postFormData';
 import styles from './AddProject.module.css';
 import { Link } from 'react-router-dom';
 import Button from '../Button';
-import useRender from './../../hooks/alertRender';
+import useRender from '../../hooks/useAlertRender';
 
 function AddProject(props) {
   const [members, setMembers] = useState();
@@ -27,13 +27,10 @@ function AddProject(props) {
       if (e.target.files.files && e.target.files.files.length > 0) {
         for (let i = 0; i < e.target.files.files.length; i++) {
           // console.log(e.target.files.files[i]);
-          formData.append(
-            'documents',
-            e.target.files.files[i]
-          );
+          formData.append('documents', e.target.files.files[i]);
         }
       }
-      
+
       let membersId = [];
       //get checked member data and store to array
       for (let i = 0; i < membersArr.length; i++) {
@@ -78,15 +75,16 @@ function AddProject(props) {
       // console.log(formData);
       //send data to server for adding a new project
       const addNewProject = await postFormData('/projects', formData);
-      // console.log(addNewProject);
+      console.log(addNewProject);
       if (addNewProject.status === 'success') {
         alertRender('success', 'Project Added Successfully');
         document.getElementById('project_form').reset();
       }
-      if (addNewProject.status === 'fail') {
+      if (addNewProject === 'error' || addNewProject.status ==='fail') {
         alertRender('error', 'Project Added Failed');
       }
     } catch (err) {
+      alertRender('error', 'Project Added Failed');
       console.log(err);
     }
   };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import getData from '../utils/getData';
 import ProjectCard from '../components/Project/ProjectCard';
 import Button from './../components/Button';
@@ -7,6 +8,8 @@ import { Link } from 'react-router-dom';
 
 function Projects() {
   const [data, setData] = useState();
+  const deleteRender = useSelector((state) => state.render.deleteRender);
+  console.log(deleteRender);
   let user = localStorage.getItem('user');
   let userData = JSON.parse(user);
   let userRole = userData && userData.role;
@@ -23,10 +26,10 @@ function Projects() {
   }
   useEffect(() => {
     getAllProjects();
-  }, []);
+  }, [deleteRender]);
   return (
-    <>
-      {userRole === 'mentor' || userRole==='employee' ? (
+    <div>
+      {userRole === 'mentor' || userRole === 'employee' ? (
         <div className={styles.container}>
           <div className={styles.top}>
             <h2 className={styles.heading}>
@@ -40,14 +43,14 @@ function Projects() {
               ''
             )}
           </div>
-          <div className={styles.bottom}>
+          <div className={styles.bottom} id={deleteRender}>
             <ProjectCard data={data}></ProjectCard>
           </div>
         </div>
       ) : (
         <div>Please Login to Access this</div>
       )}
-    </>
+    </div>
   );
 }
 

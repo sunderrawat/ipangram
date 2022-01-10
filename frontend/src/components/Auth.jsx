@@ -7,7 +7,7 @@ import classes from './Auth.module.css';
 import styles from './../components/Form/Form.module.css';
 import Button from './Button';
 import apiUrl from '../apiUrl';
-import useAlertRender from '../hooks/alertRender';
+import useAlertRender from '../hooks/useAlertRender';
 
 function Auth(props) {
   const dispatch = useDispatch();

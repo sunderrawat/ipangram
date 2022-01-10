@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../store/auth';
 import getCookie from '../utils/getCookie';
-import useRender from './../hooks/alertRender';
+import useRender from '../hooks/useAlertRender';
 import Button from './Button';
 import styles from './Nav.module.css';
 
