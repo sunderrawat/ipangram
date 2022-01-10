@@ -13,16 +13,9 @@ function Auth(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { alertRender } = useAlertRender();
-  // const modelSelectRedux = useSelector((state) => state.auth.modelSelect);
+  const modelSelect = useSelector((state) => state.auth.modelSelect);
   // console.log('modelSelectRedux ');
-  const [modelSelect, setModelSelect] = useState();
-
-  //alert render function
-  // function alertRender(type, message) {
-  //   dispatch(alertActions.alertType(type));
-  //   dispatch(alertActions.alertMessage(message));
-  //   dispatch(alertActions.showAlert());
-  // }
+  // const [modelSelect, setModelSelect] = useState();
 
   //signup handler
   const signupHandler = async (e) => {
@@ -142,13 +135,13 @@ function Auth(props) {
   };
 
   const signupClickHandler = () => {
-    // dispatch(authActions.modalSelection('signup'));
-    setModelSelect('signup');
+    dispatch(authActions.modalSelection('signup'));
+    // setModelSelect('signup');
   };
 
   const loginClickHandler = () => {
-    // dispatch(authActions.modalSelection('login'));
-    setModelSelect('login');
+    dispatch(authActions.modalSelection('login'));
+    // setModelSelect('login');
   };
 
   return (

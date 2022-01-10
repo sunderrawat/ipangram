@@ -23,6 +23,7 @@ function AddProject(props) {
       // console.log(e.target.files.files);
       const featureImage =
         e.target.feature_image.files && e.target.feature_image.files[0];
+
       if (e.target.files.files && e.target.files.files.length > 0) {
         for (let i = 0; i < e.target.files.files.length; i++) {
           // console.log(e.target.files.files[i]);
@@ -76,7 +77,7 @@ function AddProject(props) {
       }
       // console.log(formData);
       //send data to server for adding a new project
-      const addNewProject = await postFormData('/projects/upload', formData);
+      const addNewProject = await postFormData('/projects', formData);
       // console.log(addNewProject);
       if (addNewProject.status === 'success') {
         alertRender('success', 'Project Added Successfully');

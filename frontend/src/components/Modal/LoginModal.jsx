@@ -12,7 +12,7 @@ const LoginModal = (props) => {
         document.getElementById('backdrop-root')
       )}
       {ReactDOM.createPortal(
-        <div className={classes.modal}>
+        <div className={`${classes.modal} ${classes.login}`}>
           <Auth></Auth>
         </div>,
         document.getElementById('overlay-root')

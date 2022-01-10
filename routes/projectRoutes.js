@@ -40,7 +40,7 @@ router
     async (req, res) => {
       try {
         console.log('body data by user ', req.body);
-        console.log(JSON.stringify(req.body.members).slice(1,-1).length);
+        console.log(JSON.stringify(req.body.members).slice(1, -1).length);
         let members = JSON.stringify(req.body.members).slice(1, -1);
         const data = {
           name: req.body.name,
