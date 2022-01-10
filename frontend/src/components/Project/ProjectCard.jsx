@@ -16,7 +16,7 @@ function ProjectCard(props) {
             <div className={styles.top}>
               <h3 className={styles.heading}>{project.name}</h3>
               {userRole === 'mentor' ? (
-                <Link to="edit-project">
+                <Link to={`edit-project/${project._id}`}>
                   <Button className="model" name="Edit Project"></Button>
                 </Link>
               ) : (
