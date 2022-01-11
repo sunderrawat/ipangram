@@ -38,7 +38,10 @@ const projectSchema = new mongoose.Schema({
     required: [true, 'project must assign to a mentor or other member'],
   },
   documents: [String],
-  featureImage:String,
+  featureImage: {
+    type: String,
+    default: 'default.jpg',
+  },
   isApproved: {
     type: Boolean,
     default: false,

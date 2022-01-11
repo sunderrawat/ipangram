@@ -9,15 +9,8 @@ app.use(cors());
 //for body parsing data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.get('/', (req, res) => {
-//   res.status(200).json({
-//     message: 'success',
-//     data: {
-//       text: 'hello from nodejs ',
-//     },
-//   });
-// });
 
+//serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/users', userRouter);
