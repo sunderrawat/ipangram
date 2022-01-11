@@ -1,5 +1,4 @@
 import styles from './Homepage.module.css';
-
 function Homepage(props) {
   return (
     <div className={styles.homepage}>

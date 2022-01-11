@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { authActions } from '../store/auth';
 import { alertActions } from '../store/alert';
 import classes from './Auth.module.css';
+import Loading from './Loading/Loading';
 import styles from './../components/Form/Form.module.css';
 import Button from './Button';
 import apiUrl from '../apiUrl';
@@ -12,6 +13,7 @@ import useAlertRender from '../hooks/useAlertRender';
 function Auth(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const { alertRender } = useAlertRender();
   const modelSelect = useSelector((state) => state.auth.modelSelect);
   // console.log('modelSelectRedux ');
@@ -19,6 +21,7 @@ function Auth(props) {
 
   //signup handler
   const signupHandler = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       console.log('signup clicked');
@@ -37,6 +40,7 @@ function Auth(props) {
         data.password.length < 6
       ) {
         console.log('invalid data input');
+        setIsLoading(false);
         alertRender('error', 'Invalid Data');
         return;
       }
@@ -44,6 +48,7 @@ function Auth(props) {
       if (data.password !== data.passwordConfirm) {
         console.log('password are not matched');
         alertRender('error', 'password not matched');
+        setIsLoading(false);
         return;
       }
 
@@ -58,6 +63,7 @@ function Auth(props) {
       console.log(response);
       if (!response.ok) {
         console.log('Invalid data post');
+        setIsLoading(false);
         alertRender('error', 'Invalid data posted try again!');
       }
 
@@ -73,6 +79,7 @@ function Auth(props) {
         alertRender('success', 'Account Creation Success');
         dispatch(authActions.modalSelection('nothing'));
         dispatch(authActions.loginModelCustom(false));
+        setIsLoading(false);
         navigate('/projects');
       }
       //clear form input
@@ -83,11 +90,13 @@ function Auth(props) {
       e.target.role.defaultValue = '';
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
       alertRender('error', 'something went wrong try again~');
     }
   };
 
   const loginHandler = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       const data = {
@@ -98,6 +107,7 @@ function Auth(props) {
       if (data.email.length < 5 || data.password.length < 6) {
         console.log('invalid data');
         alertRender('error', 'Invaild data of email and password');
+        setIsLoading(false);
         return;
       }
       const response = await fetch(`${apiUrl}/users/login`, {
@@ -109,11 +119,14 @@ function Auth(props) {
       });
       console.log(response);
       if (!response.ok) {
+        setIsLoading(false);
         alertRender('error', 'login failed ');
+        return;
       }
       if (response.ok) {
         const user = await response.json();
         if (!user.token) {
+          setIsLoading(false);
           return alertRender('error', 'login failed ');
         }
         document.cookie =
@@ -122,11 +135,13 @@ function Auth(props) {
         localStorage.setItem('user', JSON.stringify(user.user));
         dispatch(authActions.login());
         alertRender('success', 'User Login success');
+        setIsLoading(false);
         dispatch(authActions.loginModel());
         navigate('/projects');
       }
     } catch (err) {
       console.log(err);
+      setIsLoading(true);
       alertRender('error', 'login failed ');
     }
     //clear form input
@@ -192,7 +207,11 @@ function Auth(props) {
                 </label>
               </div>
             </div>
-            <Button name="Signup" className="model"></Button>
+            {isLoading ? (
+              <Loading></Loading>
+            ) : (
+              <Button name="Signup" className="model"></Button>
+            )}
           </form>
         ) : modelSelect === 'login' ? (
           <form className={styles.form} onSubmit={loginHandler}>
@@ -205,7 +224,11 @@ function Auth(props) {
               type="password"
               id="login__password"
             />
-            <Button name="Login" className="model"></Button>
+            {isLoading ? (
+              <Loading></Loading>
+            ) : (
+              <Button name="Login" className="model"></Button>
+            )}
           </form>
         ) : (
           ''

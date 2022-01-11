@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProjectForm from '../Form/ProjectForm';
 import getData from '../../utils/getData';
+import Loading from '../Loading/Loading';
 import postFormData from '../../utils/postFormData';
 import styles from './AddProject.module.css';
 import { Link } from 'react-router-dom';
@@ -9,9 +10,11 @@ import useRender from '../../hooks/useAlertRender';
 import postData from '../../utils/postData';
 
 function AddProject(props) {
+  const [isLoading, setIsLoading] = useState(false);
   const [members, setMembers] = useState();
   const { alertRender } = useRender();
   const projectSubmitHandler = async (e) => {
+    setIsLoading(true)
     try {
       e.preventDefault();
       const formData = new FormData();
@@ -66,6 +69,7 @@ function AddProject(props) {
       ) {
         console.log('Fill all the necesarry data!');
         alertRender('error', 'Fill all the necesarry data!');
+        setIsLoading(false);
         return;
       }
       // const formData = new FormData();
@@ -83,19 +87,22 @@ function AddProject(props) {
           formData,
           'PATCH'
         );
-        console.log(uploadDocs);
+        // console.log(uploadDocs);
       }
-      console.log(addNewProject);
+      // console.log(addNewProject);
       if (addNewProject.status === 'success') {
         alertRender('success', 'Project Added Successfully');
         document.getElementById('project_form').reset();
+        setIsLoading(false);
       }
       if (addNewProject === 'error' || addNewProject.status === 'fail') {
         alertRender('error', 'Project Added Failed');
+        setIsLoading(false);
       }
     } catch (err) {
       alertRender('error', 'Project Added Failed');
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -134,6 +141,7 @@ function AddProject(props) {
             <ProjectForm
               onSubmit={projectSubmitHandler}
               members={members}
+              isLoading={isLoading}
             ></ProjectForm>
           </div>
         </div>

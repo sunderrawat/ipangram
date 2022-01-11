@@ -1,6 +1,7 @@
 import styles from './Form.module.css';
 import classes from './ProjectForm.module.css';
 import Button from '../Button';
+import Loading from '../Loading/Loading';
 
 function ProjectForm(props) {
   console.log(props.members);
@@ -38,7 +39,7 @@ function ProjectForm(props) {
           accept="image/*"
         />
         <label htmlFor="files">Choose Multiple Doucments</label>
-        <input type="file" name='files' id="files" multiple />
+        <input type="file" name="files" id="files" multiple />
         <label htmlFor="description" type="text-area">
           Description
         </label>
@@ -122,7 +123,11 @@ function ProjectForm(props) {
             </label>
           </div>
         </div>
-        <Button name="Submit" className="model"></Button>
+        {props.isLoading ? (
+          <Loading></Loading>
+        ) : (
+          <Button name="Submit" className="model"></Button>
+        )}
       </form>
     </div>
   );
