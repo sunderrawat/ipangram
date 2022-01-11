@@ -1,7 +1,7 @@
 import getCookie from './getCookie';
 import apiUrl from './../apiUrl';
 
-async function postData(url, bodyData, method='POST') {
+async function postFormData(url, bodyData, method='POST') {
   let token = getCookie('token');
   const res = await fetch(`${apiUrl}${url}`, {
     method,
@@ -19,4 +19,4 @@ async function postData(url, bodyData, method='POST') {
   return data;
 }
 
-export default postData;
+export default postFormData;

@@ -5,7 +5,7 @@ function Button(props) {
     <button
       className={`${styles.btn} ${
         props.className === 'model' ? styles.model : ''
-      }`}
+      } ${props.type === 'danger' ? styles.danger : ''}`}
       onClick={props.onClick}
     >
       {props.name}

@@ -26,6 +26,10 @@
   font-weight: 300;
 }
 
+.heading:hover {
+  cursor: pointer;
+}
+
 .bottom {
   display: flex;
 }
@@ -75,11 +79,11 @@
 }
 
 @media (max-width: 600px) {
-  .top{
+  .top {
     flex-wrap: wrap;
     gap: 2rem;
   }
-  .date{
+  .date {
     flex-direction: row;
   }
 }

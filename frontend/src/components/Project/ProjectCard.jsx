@@ -15,7 +15,9 @@ function ProjectCard(props) {
         data.map((project, i) => (
           <div className={styles.container} key={i}>
             <div className={styles.top}>
-              <h3 className={styles.heading}>{project.name}</h3>
+              <Link to={`/projects/${project._id}`}>
+                <h3 className={`${styles.heading} hover`}>{project.name}</h3>
+              </Link>
               {userRole === 'mentor' ? (
                 <>
                   <Link to={`edit-project/${project._id}`}>
@@ -27,8 +29,8 @@ function ProjectCard(props) {
                 ''
               )}
               <div className={styles.date}>
-                <Date date={project.startDate}></Date>
-                <Date date={project.endDate}></Date>
+                <Date date={project.startDate} name="Start Date"></Date>
+                <Date date={project.endDate} name="Last Date"></Date>
               </div>
             </div>
             <div className={styles.bottom}>

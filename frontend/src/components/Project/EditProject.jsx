@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ProjectForm from '../Form/ProjectForm';
 import getData from '../../utils/getData';
 import postData from '../../utils/postData';
+import postFormData from '../../utils/postFormData';
 import styles from './AddProject.module.css';
 import { Link, useParams } from 'react-router-dom';
 import Button from '../Button';
@@ -18,12 +19,23 @@ function EditProject(props) {
   const projectSubmitHandler = async (e) => {
     try {
       e.preventDefault();
+      const formData = new FormData();
       //   console.log(e.target.name.value);
       //   console.log(e.target.startDate.value);
       //   console.log(e.target.endDate.value);
       //   console.log(e.target.description.value);
       //   console.log(e.target.status.value);
       let membersArr = e.target.members;
+
+      const featureImage =
+        e.target.feature_image.files && e.target.feature_image.files[0];
+
+      if (e.target.files.files && e.target.files.files.length > 0) {
+        for (let i = 0; i < e.target.files.files.length; i++) {
+          // console.log(e.target.files.files[i]);
+          formData.append('documents', e.target.files.files[i]);
+        }
+      }
 
       let membersId = [];
       //get checked member data and store to array
@@ -42,48 +54,47 @@ function EditProject(props) {
       let data = {};
 
       //check data is entered or not
-      if(name){
-          data.name = name
+      if (name) {
+        data.name = name;
       }
-      if(startDate){
-          data.startDate = startDate;
+      if (startDate) {
+        data.startDate = startDate;
       }
-      if(endDate){
+      if (endDate) {
         data.endDate = endDate;
       }
-      if(description){
-          data.description = description;
+      if (description) {
+        data.description = description;
       }
-      if(members.length>0){
-          data.members = members;
+      if (members.length > 0) {
+        data.members = members;
       }
       data.isApproved = isApproved;
       data.isCompleted = isCompleted;
       console.log(data);
 
-    //   if (
-    //     !name ||
-    //     !startDate ||
-    //     !endDate ||
-    //     !description ||
-    //     !members.length > 0
-    //   ) {
-    //     console.log('Fill all the necesarry data!');
-    //     alertRender('error', 'Fill all the necesarry data!');
-    //     return;
-    //   }
-
       //send data to server for adding a new project
       const editProject = await postData(`/projects/${id}`, data, 'PATCH');
       // console.log(editProject);
       if (editProject.status === 'success') {
+        if (featureImage || e.target.files.files.length > 0) {
+          const uploadDocs = await postFormData(
+            `/projects/${id}/upload`,
+            formData,
+            'PATCH'
+          );
+        }
+      }
+      console.log(editProject);
+      if (editProject.status === 'success') {
         alertRender('success', 'Project Added Successfully');
         document.getElementById('project_form').reset();
       }
-      if (editProject.status === 'fail') {
+      if (editProject === 'error' || editProject.status === 'fail') {
         alertRender('error', 'Project Added Failed');
       }
     } catch (err) {
+      alertRender('error', 'Project Added Failed');
       console.log(err);
     }
   };

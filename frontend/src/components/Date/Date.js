@@ -19,7 +19,7 @@ function Date(props) {
   const day = props.date.slice(8, 10);
   return (
     <div className={styles.date} key={props.date}>
-      <span className={styles.small__heading}>Start Date : </span>
+      <span className={styles.small__heading}>{props.name} : </span>
       <span className={styles.text}>
         {day} {month}, {year}
       </span>

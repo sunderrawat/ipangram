@@ -27,3 +27,10 @@ a{
   text-decoration: none;
   color: inherit;
 }
+
+.hover:hover{
+  color: var(--primary-color);
+  cursor: pointer;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--primary-color);
+}

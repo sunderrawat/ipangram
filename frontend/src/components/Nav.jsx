@@ -61,7 +61,7 @@ function Nav() {
           <>
             <li className={styles.name}>{userData && userData.name}</li>
             <li className={`${styles.name} ${styles.hide}`}>{userData && userData.role}</li>
-            <li className={styles.name}>
+            <li className={`${styles.name} ${styles.hover}`}>
               <Link to="/projects">Projects</Link>
             </li>
             <li>

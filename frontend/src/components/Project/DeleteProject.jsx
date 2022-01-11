@@ -18,7 +18,12 @@ function DeleteProject(props) {
     // console.log(response);
   };
   return (
-    <Button name="Delete" onClick={deleteHandler} className="model"></Button>
+    <Button
+      name="Delete"
+      onClick={deleteHandler}
+      className="model"
+      type="danger"
+    ></Button>
   );
 }
 
