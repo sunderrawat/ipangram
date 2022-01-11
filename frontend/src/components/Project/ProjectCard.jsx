@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Button from '../Button';
 import DeleteProject from './DeleteProject';
 import Date from '../Date/Date';
+import CutString from '../CutString';
 import styles from './ProjectCard.module.css';
 
 function ProjectCard(props) {
@@ -19,12 +20,11 @@ function ProjectCard(props) {
                 <h3 className={`${styles.heading} hover`}>{project.name}</h3>
               </Link>
               {userRole === 'mentor' ? (
-                <>
+                <div className={styles.buttons}>
                   <Link to={`edit-project/${project._id}`}>
                     <Button className="model" name="Edit Project"></Button>
                   </Link>
-                  <DeleteProject id={project._id}></DeleteProject>
-                </>
+                </div>
               ) : (
                 ''
               )}
@@ -84,12 +84,23 @@ function ProjectCard(props) {
                       Description :{' '}
                     </span>
                     <span className={`${styles.text} ${styles.discription}`}>
-                      {project.description}
+                      <CutString
+                        str={project.description}
+                        start="0"
+                        end="200"
+                      ></CutString>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
+            {userRole === 'mentor' ? (
+              <div className={styles.buttons}>
+                <DeleteProject id={project._id}></DeleteProject>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         ))
       ) : (

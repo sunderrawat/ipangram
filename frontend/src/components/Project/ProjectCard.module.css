@@ -25,7 +25,12 @@
   font-size: 2.5rem;
   font-weight: 300;
 }
-
+.gap{
+  padding: 0 4rem 4rem 0;
+}
+.buttons {
+  min-width: 30rem;
+}
 .heading:hover {
   cursor: pointer;
 }
