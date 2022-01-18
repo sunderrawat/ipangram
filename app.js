@@ -12,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/projects/documents')));
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1', authController.protect);

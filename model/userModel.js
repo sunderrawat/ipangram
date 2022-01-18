@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -34,7 +35,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     required: [true, 'email is a required field'],
-    unique: [true, 'this email already exist in our database']
+    unique: [true, 'this email already exist in our database'],
   },
   role: {
     type: String,
@@ -49,6 +50,8 @@ const userSchema = new mongoose.Schema({
     default: Date.now(),
     select: false,
   },
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
 
 //mongoose middelware for encrypting the password
@@ -69,6 +72,17 @@ userSchema.methods.checkPassword = async function (
   dbUserPassword
 ) {
   return await bcrypt.compare(enterdPassword, dbUserPassword);
+};
+
+//create password reset token
+userSchema.methods.createPassResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  return resetToken;
 };
 
 //creating user model
